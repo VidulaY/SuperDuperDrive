@@ -43,9 +43,10 @@ public class NotesController {
     }
 
     @GetMapping("/notes/delete/{noteid}")
-    public String deleteNote(@PathVariable("noteid") Integer noteid, Model model){
+    public String deleteNote(Authentication authentication, @PathVariable("noteid") Integer noteid, Model model){
         System.out.println("** Inside delete note **");
         this.noteService.deleteNote(noteid);
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -53,6 +54,7 @@ public class NotesController {
     public String editNote(Authentication authentication, @ModelAttribute Model model, Notes note){
         model.addAttribute("notesedit", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         this.noteService.editNote(note);
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
