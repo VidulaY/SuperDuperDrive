@@ -136,8 +136,8 @@
                                 <tbody>
                                 <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button type="submit" class="btn btn-success" th:onclick="javascript: showCredentialModal([[${credential.credentialsid}]],[[${credential.url}]], [[${credential.username}]],  [[${credential.password}]])">Edit</button>
-                                        <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialid}(credentialid=${credential.credentialsid})}">Delete</a>
+                                        <button type="submit" class="btn btn-success" th:onclick="javascript: showCredentialModal([[${credential.credentialid}]],[[${credential.url}]], [[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.key)}]])">Edit</button>
+                                        <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialid}(credentialid=${credential.credentialid})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
                                     <td th:text="${credential.getUsername()}">Example Credential Username</td>
@@ -158,7 +158,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="#" method="POST" th:object="${credentials}" th:action="@{/credentials}">
-                                            <input type="hidden" name="credentialsid" id="credential-id">
+                                            <input type="hidden" name="credentialid" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>

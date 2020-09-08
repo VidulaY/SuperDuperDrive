@@ -1,10 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
-import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
-import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +15,8 @@ public class CredentialService {
     private final CredentialsMapper credentialsMapper;
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
+    @Autowired
+    private EncryptionService encryptionService;
 
     public CredentialService(CredentialsMapper credentialsMapper, UserMapper userMapper, AuthenticationService authenticationService) {
         this.credentialsMapper = credentialsMapper;
@@ -23,17 +24,19 @@ public class CredentialService {
         this.authenticationService = authenticationService;
     }
 
-    public void addCredential(Credentials credential, Authentication authentication){
+    public void addCredential(Credentials credential, Authentication authentication) {
         System.out.println(" Inside Credentials ******");
-        Credentials credentials = credentialsMapper.findCredentialById(credential.getCredentialsid());
-        System.out.println(" Credentials ****** " + credential.getCredentialsid());
+        Credentials credentials = credentialsMapper.findCredentialById(credential.getCredentialid());
+        System.out.println(" Credentials ****** " + credential.getCredentialid());
         if(credentials != null) {
             credentials.setUrl(credential.getUrl());
             credentials.setUsername(credential.getUsername());
-            credentials.setPassword(credential.getPassword());
+            credentials.setPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
             credentialsMapper.updateCredentialById(credentials);
         } else {
-            credentialsMapper.insert(new Credentials(null, credential.getUrl(), credential.getUsername(), new String("key1234"), credential.getPassword(), userMapper.getUser(credential.getUsername()).getUserid()));
+            String key = encryptionService.generateKey().toString();
+            System.out.println(" Key ****** " + key);
+            credentialsMapper.insert(new Credentials(null, credential.getUrl(), credential.getUsername(), key, encryptionService.encryptValue(credential.getPassword(), key), userMapper.getUser(credential.getUsername()).getUserid()));
         }
     }
 
@@ -47,5 +50,10 @@ public class CredentialService {
 
     public int editCredential(Credentials credential){
         return credentialsMapper.update(credential);
+    }
+
+    public String getDecryptedPassword(Integer credentialid){
+        Credentials credentials = credentialsMapper.findCredentialById(credentialid);
+        return encryptionService.decryptValue(credentials.getPassword(), credentials.getKey());
     }
 }

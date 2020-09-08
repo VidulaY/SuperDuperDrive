@@ -13,7 +13,7 @@ public interface CredentialsMapper {
     List<Credentials> getCredentials(Integer userid);
 
     @Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES(#{url}, #{username}, #{key}, #{password}, #{userid})")
-    @Options(useGeneratedKeys = true, keyProperty = "credentialsid")
+    @Options(useGeneratedKeys = true, keyProperty = "credentialid")
     int insert(Credentials credentials);
 
     @Delete("DELETE FROM CREDENTIALS WHERE credentialid = #{credentialid}")
@@ -25,10 +25,8 @@ public interface CredentialsMapper {
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialid}")
     public Credentials findCredentialById(Integer credentialid);
 
-    @Update("UPDATE CREDENTIALS SET url=#{url}, "
-            + "username=#{username} "
-            + "password=#{password} "
-            + "where credentialid=#{credentialid}")
+    @Update("UPDATE CREDENTIALS SET url=#{url}, username=#{username}, password=#{password} where credentialid=#{credentialid}")
     public void updateCredentialById(Credentials credentials);
-
 }
+
+
