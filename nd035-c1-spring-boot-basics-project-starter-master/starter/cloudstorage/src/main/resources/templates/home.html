@@ -134,14 +134,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button type="submit" class="btn btn-success" th:onclick="javascript: showCredentialModal([[${credential.credentialsid}]],[[${credential.url}]], [[${credential.username}]],  [[${credential.password}]])">Edit</button>
+                                        <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialid}(credentialid=${credential.credentialsid})}">Delete</a>
                                     </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td>Example Credential Password</td>
+                                    <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
+                                    <td th:text="${credential.getUsername()}">Example Credential Username</td>
+                                    <td th:text="${credential.getPassword()}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -157,8 +157,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
-                                            <input type="hidden" name="credentialId" id="credential-id">
+                                        <form action="#" method="POST" th:object="${credentials}" th:action="@{/credentials}">
+                                            <input type="hidden" name="credentialsid" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
