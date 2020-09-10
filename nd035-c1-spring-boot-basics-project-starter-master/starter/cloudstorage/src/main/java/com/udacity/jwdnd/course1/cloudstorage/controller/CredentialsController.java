@@ -1,7 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
-import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,7 +17,6 @@ public class CredentialsController {
     private CredentialService credentialService;
     private UserService userService;
     private AuthenticationService authenticationService;
-    @Autowired
     private EncryptionService encryptionService;
 
     public CredentialsController(CredentialService credentialService, UserService userService, AuthenticationService authenticationService) {
@@ -32,6 +30,11 @@ public class CredentialsController {
         return new Credentials();
     }
 
+    @ModelAttribute("encryptionService")
+    public EncryptionService getEncryptionServiceDto() {
+        return new EncryptionService();
+    }
+
     @PostMapping("/credentials")
     public String postCredentials(Authentication authentication, @ModelAttribute("credentials") Credentials credentials, Model model){
         this.credentialService.addCredential(credentials, authentication);
@@ -41,7 +44,7 @@ public class CredentialsController {
 
 
     @GetMapping("/credentials")
-    public String getNote(Authentication authentication, Model model){
+    public String getCredentials(Authentication authentication, Model model){
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         return "home";
@@ -49,7 +52,7 @@ public class CredentialsController {
 
     @GetMapping("/credentials/delete/{credentialid}")
     public String deleteCredentials(Authentication authentication, @PathVariable("credentialid") Integer credentialid, Model model){
-        System.out.println("** Inside delete note **");
+        System.out.println("** Inside delete Credentials **");
         this.credentialService.deleteCredential(credentialid);
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
@@ -57,7 +60,7 @@ public class CredentialsController {
     }
 
     @PostMapping("/credentials/edit")
-    public String editNote(Authentication authentication, @ModelAttribute Model model, Credentials credentials){
+    public String editCredentials(Authentication authentication, @ModelAttribute Model model, Credentials credentials){
         model.addAttribute("credentialsedit", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         this.credentialService.editCredential(credentials);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));

@@ -31,7 +31,13 @@ public class CredentialService {
         if(credentials != null) {
             credentials.setUrl(credential.getUrl());
             credentials.setUsername(credential.getUsername());
-            credentials.setPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
+            String credentialPassword = credential.getPassword();
+            String encryptionKey = getEncryptionKey(credential.getCredentialid());
+            System.out.println("  encryptionKey ****** " + encryptionKey);
+            System.out.println("  password ****** " + credentialPassword);
+            String encryptedPassword = encryptionService.encryptValue(credentialPassword, encryptionKey);
+            System.out.println("  encryptedPassword ****** " + encryptedPassword);
+            credentials.setPassword(encryptedPassword);
             credentialsMapper.updateCredentialById(credentials);
         } else {
             String key = encryptionService.generateKey().toString();
@@ -55,5 +61,10 @@ public class CredentialService {
     public String getDecryptedPassword(Integer credentialid){
         Credentials credentials = credentialsMapper.findCredentialById(credentialid);
         return encryptionService.decryptValue(credentials.getPassword(), credentials.getKey());
+    }
+
+    public String getEncryptionKey(Integer credentialid){
+        Credentials credentials = credentialsMapper.findCredentialById(credentialid);
+        return credentials.getKey();
     }
 }
