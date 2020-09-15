@@ -2,6 +2,9 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -11,6 +14,7 @@ import java.util.Base64;
 public class UserService {
     private final UserMapper userMapper;
     private final HashService hashService;
+    private User currentUser;
 
 
     public UserService(UserMapper userMapper, HashService hashService) {
@@ -34,5 +38,17 @@ public class UserService {
 
     public User getUser(String username){
         return userMapper.getUser(username);
+    }
+
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth instanceof AnonymousAuthenticationToken) {
+            throw new SecurityException("Current user can only be fetched in a secured area.");
+        }
+        if (currentUser != null && currentUser.getUsername() == auth.getName()) {
+            return currentUser;
+        }
+        currentUser = userMapper.getUser(auth.getName());
+        return currentUser;
     }
 }

@@ -15,13 +15,15 @@ public class CredentialService {
     private final CredentialsMapper credentialsMapper;
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
+    private final UserService userService;
     @Autowired
     private EncryptionService encryptionService;
 
-    public CredentialService(CredentialsMapper credentialsMapper, UserMapper userMapper, AuthenticationService authenticationService) {
+    public CredentialService(CredentialsMapper credentialsMapper, UserMapper userMapper, AuthenticationService authenticationService, UserService userService) {
         this.credentialsMapper = credentialsMapper;
         this.userMapper = userMapper;
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     public void addCredential(Credentials credential, Authentication authentication) {
@@ -66,5 +68,9 @@ public class CredentialService {
     public String getEncryptionKey(Integer credentialid){
         Credentials credentials = credentialsMapper.findCredentialById(credentialid);
         return credentials.getKey();
+    }
+
+    public List<Credentials> getAllCredentials(){
+        return credentialsMapper.getCredentials(userService.getCurrentUser().getUserid());
     }
 }

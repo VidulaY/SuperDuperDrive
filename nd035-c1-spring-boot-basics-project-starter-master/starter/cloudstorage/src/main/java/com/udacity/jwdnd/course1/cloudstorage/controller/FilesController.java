@@ -2,10 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
-import com.udacity.jwdnd.course1.cloudstorage.services.AuthenticationService;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,11 +22,17 @@ public class FilesController {
     private FileService fileService;
     private UserService userService;
     private AuthenticationService authenticationService;
+    private CredentialService credentialService;
+    private NoteService noteService;
+    private EncryptionService encryptionService;
 
-    public FilesController(FileService fileService, UserService userService, AuthenticationService authenticationService) {
+    public FilesController(FileService fileService, UserService userService, AuthenticationService authenticationService, CredentialService credentialService, NoteService noteService, EncryptionService encryptionService) {
         this.fileService = fileService;
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.credentialService = credentialService;
+        this.noteService = noteService;
+        this.encryptionService = encryptionService;
     }
 
     @ModelAttribute("files")
@@ -52,10 +55,16 @@ public class FilesController {
                 model.addAttribute("fileUploadError","File upload error");
             }
             model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
+            model.addAttribute("encryptionService", encryptionService);
+            model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+            model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -63,6 +72,9 @@ public class FilesController {
     @GetMapping("/files")
     public String getNote(Authentication authentication, Model model){
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -71,6 +83,9 @@ public class FilesController {
         System.out.println("** Inside delete file **");
         this.fileService.deleteFile(fileid);
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -78,6 +93,9 @@ public class FilesController {
     public ResponseEntity viewFile(Authentication authentication, @PathVariable("fileid") Integer fileid, Model model){
         System.out.println("** Inside view file **");
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         Files file = fileService.getFilesById(fileid);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(file.getContenttype()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")

@@ -14,11 +14,13 @@ public class FileService {
     private final FilesMapper filesMapper;
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
-    public FileService(FilesMapper filesMapper, UserMapper userMapper, AuthenticationService authenticationService) {
+    public FileService(FilesMapper filesMapper, UserMapper userMapper, AuthenticationService authenticationService, UserService userService) {
         this.filesMapper = filesMapper;
         this.userMapper = userMapper;
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     public void addFiles(Files file, Authentication authentication){
@@ -49,7 +51,10 @@ public class FileService {
         } else {
             return false;
         }
+    }
 
+    public List<Files> getAllFiles(){
+        return filesMapper.getFiles(userService.getCurrentUser().getUserid());
     }
 }
 

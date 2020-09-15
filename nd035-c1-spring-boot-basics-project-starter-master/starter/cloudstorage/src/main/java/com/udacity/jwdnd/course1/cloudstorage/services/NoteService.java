@@ -14,11 +14,13 @@ public class NoteService {
     private final NotesMapper noteMapper;
     private final UserMapper userMapper;
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
-    public NoteService(NotesMapper noteMapper, UserMapper userMapper, AuthenticationService authenticationService) {
+    public NoteService(NotesMapper noteMapper, UserMapper userMapper, AuthenticationService authenticationService, UserService userService) {
         this.noteMapper = noteMapper;
         this.userMapper = userMapper;
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     public void addNote(Notes note, Authentication authentication){
@@ -42,6 +44,10 @@ public class NoteService {
 
     public int editNote(Notes note){
         return noteMapper.update(note);
+    }
+
+    public List<Notes> getAllNotes(){
+        return noteMapper.getNotes(userService.getCurrentUser().getUserid());
     }
 
 }

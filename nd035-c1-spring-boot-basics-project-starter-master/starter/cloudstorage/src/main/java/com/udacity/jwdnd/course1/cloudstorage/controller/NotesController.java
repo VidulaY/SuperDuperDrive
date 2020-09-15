@@ -1,9 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
-import com.udacity.jwdnd.course1.cloudstorage.services.AuthenticationService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +14,17 @@ public class NotesController {
     private NoteService noteService;
     private UserService userService;
     private AuthenticationService authenticationService;
+    private CredentialService credentialService;
+    private FileService fileService;
+    private EncryptionService encryptionService;
 
-    public NotesController(NoteService noteService, UserService userService, AuthenticationService authenticationService) {
+    public NotesController(NoteService noteService, UserService userService, AuthenticationService authenticationService, CredentialService credentialService, FileService fileService, EncryptionService encryptionService) {
         this.noteService = noteService;
         this.userService = userService;
         this.authenticationService = authenticationService;
+        this.credentialService = credentialService;
+        this.fileService = fileService;
+        this.encryptionService = encryptionService;
     }
 
     @ModelAttribute("notes")
@@ -32,6 +36,9 @@ public class NotesController {
     public String postNote(Authentication authentication, @ModelAttribute("notes") Notes notes, Model model){
         this.noteService.addNote(notes, authentication);
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -39,6 +46,9 @@ public class NotesController {
     @GetMapping("/notes")
     public String getNote(Authentication authentication, Model model){
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -47,6 +57,9 @@ public class NotesController {
         System.out.println("** Inside delete note **");
         this.noteService.deleteNote(noteid);
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
@@ -55,6 +68,9 @@ public class NotesController {
         model.addAttribute("notesedit", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         this.noteService.editNote(note);
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("encryptionService", encryptionService);
+        model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
+        model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
         return "home";
     }
 
