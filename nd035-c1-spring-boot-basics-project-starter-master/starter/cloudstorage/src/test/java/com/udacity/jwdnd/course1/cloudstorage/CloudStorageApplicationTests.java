@@ -36,41 +36,41 @@ class CloudStorageApplicationTests {
 			driver.quit();
 		}
 	}
-//
-//	@Test
-//	public void getLoginPage() {
-//		driver.get("http://localhost:" + this.port + "/login");
-//		Assertions.assertEquals("Login", driver.getTitle());
-//	}
-//
-//	@Test
-//	public void getSignupPage() {
-//		driver.get("http://localhost:" + this.port + "/signup");
-//		Assertions.assertEquals("Sign Up", driver.getTitle());
-//	}
-//
-//	@Test
-//	public void testUnauthorizedAccess() {
-//		driver.get("http://localhost:" + this.port + "/home");
-//		Assertions.assertNotEquals("Home", driver.getTitle());
-//		Assertions.assertEquals("Login", driver.getTitle());
-//	}
-//	@Test
-//	public void testUserSignupLogin(){
-//		String username = "test";
-//		String password = "password";
-//		driver.get("http://localhost:" + this.port + "/signup");
-//
-//		SignupPage signupPage = new SignupPage(driver);
-//		signupPage.signup("Warren", "Buffett", username, password);
-//
-//		driver.get("http://localhost:" + this.port + "/login");
-//		LoginPage loginPage = new LoginPage(driver);
-//		loginPage.login(username, password);
-//		Assertions.assertEquals("Home", driver.getTitle());
-//	}
 
-	@Order(2)
+	@Test
+	public void getLoginPage() {
+		driver.get("http://localhost:" + this.port + "/login");
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+	@Test
+	public void getSignupPage() {
+		driver.get("http://localhost:" + this.port + "/signup");
+		Assertions.assertEquals("Sign Up", driver.getTitle());
+	}
+
+	@Test
+	public void testUnauthorizedAccess() {
+		driver.get("http://localhost:" + this.port + "/home");
+		Assertions.assertNotEquals("Home", driver.getTitle());
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+	@Test
+	public void testUserSignupLogin(){
+		String username = "test";
+		String password = "password";
+		driver.get("http://localhost:" + this.port + "/signup");
+
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup("Warren", "Buffett", username, password);
+
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
+		Assertions.assertEquals("Home", driver.getTitle());
+	}
+
+	@Order(1)
 	@Test
 	public void testNoteAddition(){
 		String username= "test";
@@ -109,6 +109,7 @@ class CloudStorageApplicationTests {
 	}
 
 
+	@Order(3)
 	@Test
 	public void testNoteEdit(){
 		String username= "test";
@@ -157,7 +158,7 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Updated Description for Note1", wait.until(ExpectedConditions.elementToBeClickable(By.id("note-description-display"))).getText());
 	}
 
-	@Order(1)
+	@Order(2)
 	@Test
 	public void testNoteDelete(){
 		String username= "test";
@@ -200,6 +201,136 @@ class CloudStorageApplicationTests {
 		HomePage homeTest = new HomePage(driver);
 		Assertions.assertThrows(NoSuchElementException.class, homeTest::getNoteDescriptionDisplay);
 		Assertions.assertThrows(NoSuchElementException.class, homeTest::getNoteTitleDisplay);
+	}
 
+	@Order(4)
+	@Test
+	public void testCredentialAddition(){
+		String username= "test";
+		String password = "password";
+		String firstname = "Warren";
+		String lastname = "Buffett";
+		String credentialURL = "www.google.com";
+		String credentialUsername = "test";
+		String credentialPassword = "pass";
+
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup(firstname, lastname, username, password);
+
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
+
+		System.out.println("*** Logged In *** ");
+		WebDriverWait wait = new WebDriverWait(driver, 100);
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait wait1 = new WebDriverWait(driver, 100);
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		System.out.println("*** Home page *** ");
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("add-credential-button"))).click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url"))).sendKeys(credentialURL);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username"))).sendKeys(credentialUsername);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password"))).sendKeys(credentialPassword);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-save-button"))).click();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		Assertions.assertEquals(credentialURL, wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url-display"))).getText());
+		Assertions.assertEquals(credentialUsername, wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username-display"))).getText());
+		Assertions.assertNotEquals(credentialPassword, wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password-display"))).getText());
+	}
+
+	@Order(6)
+	@Test
+	public void testCredentialEdit(){
+		String username= "test";
+		String password = "password";
+		String firstname = "Warren";
+		String lastname = "Buffett";
+		String credentialURL = "www.google.com";
+		String credentialUsername = "test";
+		String credentialPassword = "pass";
+
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup(firstname, lastname, username, password);
+
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
+
+		System.out.println("*** Logged In *** ");
+		WebDriverWait wait = new WebDriverWait(driver, 100);
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait wait1 = new WebDriverWait(driver, 100);
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		System.out.println("*** Home page *** ");
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("edit-credential-button"))).click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url"))).clear();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url"))).sendKeys("updated URL");
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username"))).clear();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username"))).sendKeys("updated username");
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password"))).clear();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password"))).sendKeys("updated password");
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-save-button"))).click();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		Assertions.assertEquals("updated URL", wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url-display"))).getText());
+		Assertions.assertEquals("updated username", wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username-display"))).getText());
+		Assertions.assertNotEquals("updated password", wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password-display"))).getText());
+	}
+	@Order(5)
+	@Test
+	public void testCredentialDelete(){
+		String username= "test";
+		String password = "password";
+		String firstname = "Warren";
+		String lastname = "Buffett";
+		String credentialURL = "www.google.com";
+		String credentialUsername = "test";
+		String credentialPassword = "pass";
+
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup(firstname, lastname, username, password);
+
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username, password);
+
+		System.out.println("*** Logged In *** ");
+		WebDriverWait wait = new WebDriverWait(driver, 100);
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait wait1 = new WebDriverWait(driver, 100);
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		System.out.println("*** Home page *** ");
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("add-credential-button"))).click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url"))).sendKeys(credentialURL);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-username"))).sendKeys(credentialUsername);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password"))).sendKeys(credentialPassword);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-save-button"))).click();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		driver.findElement(By.id("nav-credentials-tab")).click();
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("delete-credential-button"))).click();
+
+		HomePage homeTest = new HomePage(driver);
+		Assertions.assertThrows(NoSuchElementException.class, homeTest::getCredentialURLDisplay);
+		Assertions.assertThrows(NoSuchElementException.class, homeTest::getCredentialUsernameDisplay);
+		Assertions.assertThrows(NoSuchElementException.class, homeTest::getCredentialPasswordDisplay);
 	}
 }

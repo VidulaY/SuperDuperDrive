@@ -41,6 +41,15 @@ public class HomePage {
     @FindBy(id = "note-decription-display")
     private WebElement noteDescriptionDisplay;
 
+    @FindBy(id = "credential-url-display")
+    private WebElement credentialURLDisplay;
+
+    @FindBy(id = "credential-username-display")
+    private WebElement credentialUsernameDisplay;
+
+    @FindBy(id = "credential-password-display")
+    private WebElement credentialPasswordDisplay;
+
     private WebDriver webDriver;
 
     public HomePage(WebDriver webDriver) {
@@ -57,5 +66,17 @@ public class HomePage {
 
     public String getNoteDescriptionDisplay() {
         return noteDescriptionDisplay.getText();
+    }
+
+    public String getCredentialURLDisplay() {
+        return credentialURLDisplay.getText();
+    }
+
+    public String getCredentialUsernameDisplay() {
+        return credentialUsernameDisplay.getText();
+    }
+
+    public String getCredentialPasswordDisplay() {
+        return credentialPasswordDisplay.getText();
     }
 }
