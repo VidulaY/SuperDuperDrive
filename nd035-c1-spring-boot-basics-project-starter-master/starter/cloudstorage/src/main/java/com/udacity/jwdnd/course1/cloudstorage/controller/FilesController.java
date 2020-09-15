@@ -65,7 +65,7 @@ public class FilesController {
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
 
