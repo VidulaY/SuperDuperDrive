@@ -191,12 +191,9 @@ class CloudStorageApplicationTests {
 
 		driver.get("http://localhost:" + this.port + "/home");
 		driver.findElement(By.id("nav-notes-tab")).click();
-		WebDriverWait delay = new WebDriverWait(driver, 30);
 		System.out.println("*** Clicked Notes Tab 2 *** ");
-		wait.until(ExpectedConditions.elementToBeClickable(By.id("delete-note-button"))).click();
 
-		driver.get("http://localhost:" + this.port + "/home");
-		driver.findElement(By.id("nav-notes-tab")).click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("delete-note-button"))).click();
 
 		HomePage homeTest = new HomePage(driver);
 		Assertions.assertThrows(NoSuchElementException.class, homeTest::getNoteDescriptionDisplay);

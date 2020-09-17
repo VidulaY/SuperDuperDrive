@@ -10,7 +10,6 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-
             <div class="alert alert-success fill-parent" th:if="${fileUploadSuccess}">
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a href="/home">here</a> to continue.</span>
@@ -20,6 +19,42 @@
                 <span th:text="${fileUploadError}"></span>
                 <span>Click <a href="/home">here</a> to continue.</span>
             </div>
+
+            <div class="alert alert-success fill-parent" th:if="${credentialAddSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span>Your changes were successfully saved. Click <a href="/home">here</a> to continue.</span>
+            </div>
+
+            <div class="alert alert-success fill-parent" th:if="${credentialUpdateSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${credentialUpdateSuccess}"></span>
+                <span>Click <a href="/home">here</a> to continue.</span>
+            </div>
+
+            <div class="alert alert-success fill-parent" th:if="${credentialDeleteSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${credentialDeleteSuccess}"></span>
+                <span>Click <a href="/home">here</a> to continue.</span>
+            </div>
+
+            <div class="alert alert-success fill-parent" th:if="${notesAddSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${notesAddSuccess}"></span>
+                <span>Click <a href="/home">here</a> to continue.</span>
+            </div>
+
+            <div class="alert alert-success fill-parent" th:if="${notesUpdateSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${notesUpdateSuccess}"></span>
+                <span>Click <a href="/home">here</a> to continue.</span>
+            </div>
+
+            <div class="alert alert-success fill-parent" th:if="${notesDeleteSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${notesDeleteSuccess}"></span>
+                <span>Click <a href="/home">here</a> to continue.</span>
+            </div>
+
         </div>
     </body>
 </html>

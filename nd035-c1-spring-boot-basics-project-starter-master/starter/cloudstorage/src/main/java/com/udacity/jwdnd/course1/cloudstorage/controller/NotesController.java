@@ -35,11 +35,12 @@ public class NotesController {
     @PostMapping("/notes")
     public String postNote(Authentication authentication, @ModelAttribute("notes") Notes notes, Model model){
         this.noteService.addNote(notes, authentication);
+        model.addAttribute("notesAddSuccess", "Note added successfully!");
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
 
@@ -56,22 +57,24 @@ public class NotesController {
     public String deleteNote(Authentication authentication, @PathVariable("noteid") Integer noteid, Model model){
         System.out.println("** Inside delete note **");
         this.noteService.deleteNote(noteid);
+        model.addAttribute("notesDeleteSuccess", "Note deleted successfully!");
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
     @PostMapping("/notes/edit")
     public String editNote(Authentication authentication, @ModelAttribute Model model, Notes note){
         model.addAttribute("notesedit", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         this.noteService.editNote(note);
+        model.addAttribute("noteUpdateSuccess", "Note updated successfully!");
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
 }

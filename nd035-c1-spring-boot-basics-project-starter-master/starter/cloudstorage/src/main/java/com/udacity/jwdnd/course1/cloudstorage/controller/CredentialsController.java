@@ -43,10 +43,11 @@ public class CredentialsController {
     @PostMapping("/credentials")
     public String postCredentials(Authentication authentication, @ModelAttribute("credentials") Credentials credentials, Model model){
         this.credentialService.addCredential(credentials, authentication);
+        model.addAttribute("credentialAddSuccess", "Credential added successfully!");
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
 
@@ -63,21 +64,23 @@ public class CredentialsController {
     public String deleteCredentials(Authentication authentication, @PathVariable("credentialid") Integer credentialid, Model model){
         System.out.println("** Inside delete Credentials **");
         this.credentialService.deleteCredential(credentialid);
+        model.addAttribute("credentialDeleteSuccess", "Credential deleted successfully!");
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
     @PostMapping("/credentials/edit")
     public String editCredentials(Authentication authentication, @ModelAttribute Model model, Credentials credentials){
         model.addAttribute("credentialsedit", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         this.credentialService.editCredential(credentials);
+        model.addAttribute("credentialupdateSuccess", "Credential updated successfully!");
         model.addAttribute("credentials", this.credentialService.getCredentials(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("notes", this.noteService.getNotes(userService.getUser(authentication.getName()).getUserid()));
         model.addAttribute("files", this.fileService.getFiles(userService.getUser(authentication.getName()).getUserid()));
-        return "home";
+        return "result";
     }
 
 }

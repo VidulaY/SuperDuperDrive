@@ -44,7 +44,7 @@ public class CredentialService {
         } else {
             String key = encryptionService.generateKey().toString();
             System.out.println(" Key ****** " + key);
-            credentialsMapper.insert(new Credentials(null, credential.getUrl(), credential.getUsername(), key, encryptionService.encryptValue(credential.getPassword(), key), userMapper.getUser(credential.getUsername()).getUserid()));
+            credentialsMapper.insert(new Credentials(null, credential.getUrl(), credential.getUsername(), key, encryptionService.encryptValue(credential.getPassword(), key), userMapper.getUser(authentication.getName()).getUserid()));
         }
     }
 
